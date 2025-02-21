@@ -1,66 +1,58 @@
-"use client";
-
 import "ol/ol.css";
-import TileLayer from "ol/layer/Tile";
-import { Map, View } from "ol";
-import OSM from "ol/source/OSM";
-import Style from "ol/style/Style";
-import { Circle } from "ol/geom";
-import Fill from "ol/style/Fill";
-import Stroke from "ol/style/Stroke";
 import { fromLonLat } from "ol/proj";
-import { useEffect } from "react";
 import SideBar from "../components/SideBar";
 
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
 import { LineString } from "ol/geom";
 import Feature from "ol/Feature";
+import MainMap from "../components/MainMap";
+import { parseString } from "xml2js";
+import { Coordinate } from "ol/coordinate";
+import { Suspense } from "react";
 
-export default function MainMap() {
-  useEffect(() => {
-    const map = new Map({
-      target: "map",
-      layers: [
-        new TileLayer({
-          source: new OSM(),
-        }),
-      ],
-      view: new View({
-        center: fromLonLat([127.00169, 37.56421]), // 서울 중심 좌표
-        zoom: 13,
-      }),
-    });
+interface ItemList {
+  gpsX: string;
+  gpsY: string;
+  no: string;
+  posX: string;
+  posY: string;
+}
 
-    // 경로 좌표 데이터
-    const routeCoordinates = [
-      fromLonLat([127.00169, 37.56421]), // 시작점
-      fromLonLat([127.005, 37.565]), // 중간점
-      fromLonLat([127.01, 37.57]), // 끝점
-    ];
+// interface RoutePath {
+//   ServiceResult: {
+//     comMsgHeader: string;
+//     msgHeader: { headerCd: string; headerMsg: string; itemCount: number };
+//     msgBody: {
+//       itemList: ItemList[];
+//     };
+//   };
+// }
 
-    // LineString 생성
-    const lineString = new LineString(routeCoordinates);
+const URL = process.env.BUS_ROUTE_API;
 
-    // Feature 생성
-    const lineFeature = new Feature(lineString);
+async function getRoutePath() {
+  const response = await fetch(URL || "");
+  const xml = await response.text();
+  const numArr: number[][] = [];
 
-    // 벡터 소스 및 레이어 생성
-    const vectorSource = new VectorSource({
-      features: [lineFeature],
-    });
-    const vectorLayer = new VectorLayer({
-      source: vectorSource,
-    });
+  parseString(xml, (err, result) => {
+    const tempArr: ItemList[] = result.ServiceResult.msgBody[0].itemList;
 
-    // 지도에 벡터 레이어 추가
-    map.addLayer(vectorLayer);
-  }, []);
+    tempArr.map((route: ItemList) =>
+      numArr.push([Number(route.gpsX), Number(route.gpsY)])
+    );
+  });
+  return numArr;
+}
+
+export default async function MapPage() {
+  const routeCoordinates: number[][] = await getRoutePath();
 
   return (
     <div style={{ display: "flex", position: "relative" }}>
       <SideBar />
-      <div id="map" style={{ width: "100vw", height: "100vh" }}></div>
+      <MainMap numArr={routeCoordinates} />
     </div>
   );
 }
