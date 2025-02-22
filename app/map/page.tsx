@@ -19,16 +19,6 @@ interface ItemList {
   posY: string;
 }
 
-// interface RoutePath {
-//   ServiceResult: {
-//     comMsgHeader: string;
-//     msgHeader: { headerCd: string; headerMsg: string; itemCount: number };
-//     msgBody: {
-//       itemList: ItemList[];
-//     };
-//   };
-// }
-
 const URL = process.env.BUS_ROUTE_API;
 
 async function getRoutePath() {
