@@ -1,15 +1,8 @@
 import "ol/ol.css";
-import { fromLonLat } from "ol/proj";
 import SideBar from "../components/SideBar";
 
-import { Vector as VectorLayer } from "ol/layer";
-import { Vector as VectorSource } from "ol/source";
-import { LineString } from "ol/geom";
-import Feature from "ol/Feature";
 import MainMap from "../components/MainMap";
 import { parseString } from "xml2js";
-import { Coordinate } from "ol/coordinate";
-import { Suspense } from "react";
 
 interface ItemList {
   gpsX: string;
