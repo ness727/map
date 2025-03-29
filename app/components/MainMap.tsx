@@ -1,10 +1,12 @@
 "use client";
 
 import { View, Map, Feature } from "ol";
+import { GeoJSON } from "ol/format";
+import { Draw } from "ol/interaction";
 import TileLayer from "ol/layer/Tile";
 import { fromLonLat } from "ol/proj";
 import { OSM } from "ol/source";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as SourceVector } from "ol/source";
 import { LineString, Point } from "ol/geom";
@@ -21,8 +23,10 @@ export default function MainMap({
   busRoutePosArr: number[][];
   busPosArr: number[][];
 }) {
+  const [map, setMap] = useState<Map>(new Map());
+
   useEffect(() => {
-    const map = new Map({
+    const initialMap = new Map({
       target: "map",
       layers: [
         new TileLayer({
@@ -34,7 +38,15 @@ export default function MainMap({
         zoom: 13,
       }),
     });
+    setMap(initialMap);
 
+    // 컴포넌트 언마운트 시 맵 정리
+    return () => {
+      initialMap.setTarget(undefined);
+    };
+  }, []);
+
+  useEffect(() => {
     // 버스 노선 경로 벡터 레이어 추가
     const busRouteLayer = getBusRouteVectorLayer(busRoutePosArr);
     map.addLayer(busRouteLayer);
@@ -44,9 +56,42 @@ export default function MainMap({
       const busPosMarkerLayer = getBusPosMarkerLayer(busPos);
       map.addLayer(busPosMarkerLayer);
     });
-  }, [busRoutePosArr, busPosArr]);
+  }, [busPosArr, busRoutePosArr, map]);
 
-  return <div id="map" style={{ width: "100vw", height: "100vh" }}></div>;
+  // 벡터 소스 및 레이어 생성
+  const vectorSource = new SourceVector({
+    wrapX: false,
+    features: [],
+  });
+
+  // 벡터 레이어 생성
+  const vectorLayer = new VectorLayer({
+    source: vectorSource,
+  });
+  map.addLayer(vectorLayer);
+
+  // 화면에 도형 그리기
+  const drawVectorLayer = () => {
+    const lineDraw = new Draw({
+      source: vectorSource,
+      type: "LineString",
+    });
+    map.addInteraction(lineDraw);
+  };
+
+  const saveVectorLayer = () => {
+    console.log(
+      new GeoJSON().writeFeatures(vectorLayer?.getSource().getFeatures())
+    );
+  };
+
+  return (
+    <>
+      <button onClick={drawVectorLayer}>그리기</button>
+      <button onClick={saveVectorLayer}>저장</button>
+      <div id="map" style={{ width: "100vw", height: "100vh" }}></div>
+    </>
+  );
 }
 
 // 버스 노선 경로 벡터 레이어
