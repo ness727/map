@@ -1,5 +1,6 @@
 import Link from "next/link";
+import Landing from "./landing/page";
 
 export default function Home() {
-  return <Link href="/map">맵 보기</Link>;
+  return <Landing />;
 }

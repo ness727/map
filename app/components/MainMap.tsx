@@ -16,6 +16,8 @@ import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
 import Icon from "ol/style/Icon";
 
+import styles from './MainMap.module.css'
+
 export default function MainMap({
   busRoutePosArr,
   busPosArr,
@@ -87,9 +89,11 @@ export default function MainMap({
 
   return (
     <>
-      <button onClick={drawVectorLayer}>그리기</button>
-      <button onClick={saveVectorLayer}>저장</button>
-      <div id="map" style={{ width: "100vw", height: "100vh" }}></div>
+      <div className={styles.buttonBox}>
+        {/* <button onClick={drawVectorLayer}>그리기</button>
+        <button onClick={saveVectorLayer}>저장</button> */}
+      </div>
+      <div id="map" style={{ width: "100vw", height: "100vh"}}></div>
     </>
   );
 }
