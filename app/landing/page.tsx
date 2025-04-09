@@ -9,7 +9,7 @@ export default function Landing() {
     async function login() {
       const response = await fetch("http://localhost:8080/login", {
             method:'POST' 
-            , headers: {"Content-Type": "application/json",}
+            , headers: {"Content-Type": "application/x-www-form-urlencoded",}
             , body : JSON.stringify({id: id, pwd: pwd})
         })
         .then(res => {
