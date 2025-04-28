@@ -1,30 +1,35 @@
-'use client'
+import Head from "next/head";
+import styles from "./Landing.module.css";
+import React from "react";
+import SearchBox from "../components/SearchBox";
 
-import { useState } from "react";
+export default function Home() {
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>맵플 랜딩 페이지</title>
+        <meta name="description" content="원하는 경로를 입력하세요" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-export default function Landing() {
-    const [id, setId] = useState("");
-    const [pwd, setPwd] = useState("");
+      {/* <Header /> */}
 
-    async function login() {
-      const response = await fetch("http://localhost:8080/login", {
-            method:'POST' 
-            , headers: {"Content-Type": "application/x-www-form-urlencoded",}
-            , body : JSON.stringify({id: id, pwd: pwd})
-        })
-        .then(res => {
-            console.log("로그인 성공")
-        })
-        .catch(error => {
-            console.log("로그인 실패");
-        });
-    }
+      <main className={styles.main}>
+        {/* <h1 className={styles.title}>맵플</h1> */}
+        <img
+          alt=""
+          height={200}
+          width={300}
+          src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FCOYlE%2FbtsND2B0UHb%2FCX0KSf0CkLUEKkNijUSnWK%2Fimg.png"
+        />
+        <SearchBox />
 
-    return (
-        <div style={{margin: "10px"}}>
-            <input type='text' name='id' style={{outline: "0.3rem solid"}} onChange={(e) => { setId(e.target.value) }} />
-            <input type='password' style={{outline: "0.3rem solid"}} name='pwd' onChange={(e) => { setPwd(e.target.value) }} />
-            <button onClick={login}>로그인</button>
-        </div>
-    );
+        {/* <div className={styles.loginContainer}>
+            <button className={styles.loginButton}>로그인</button>
+          </div> */}
+      </main>
+
+      <footer className={styles.footer}>그냥 잘하자</footer>
+    </div>
+  );
 }

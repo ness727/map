@@ -1,0 +1,75 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0.5rem;
+  position: relative; /* 부모 요소에 position 추가 */
+}
+
+.container::before {
+  content: ""; /* 가상 요소에 content 추가 */
+  z-index: -10;
+  position: absolute; /* position을 absolute로 변경 */
+  top: 0; /* 위치 설정 */
+  left: 0; /* 위치 설정 */
+  right: 0; /* 위치 설정 */
+  bottom: 0; /* 위치 설정 */
+  background-image: url("https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcSYC7R%2FbtsNnkJi3tH%2FqO3XaO8K3KMKuk8gg5wKKk%2Fimg.jpg");
+  filter: brightness(0.4);
+  background-size: cover;
+  filter: blur(5px);
+}
+
+.main {
+  z-index: 10;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #007bff;
+}
+
+.title {
+  font-size: 4rem;
+  text-align: center;
+}
+
+/* .searchContainer {
+    margin-top: 20px;
+  }
+  
+  .searchInput {
+    padding: 10px;
+    font-size: 1.5rem;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  } */
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  color: white;
+  text-shadow: 3px 4px 5px gray;
+}
+
+.searchButton {
+  border: 1px solid #ccc;
+  padding: 15px;
+}
+
+.loginButton {
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  background-color: #28a745; /* 로그인 버튼 색상 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
