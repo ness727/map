@@ -3,7 +3,7 @@
 import { useState } from "react";
 import styles from "./Login.module.css";
 
-export default function Join({ goToMain }: { goToMain: () => void }) {
+export default function Join({ setClick }: { setClick: () => void }) {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
 
@@ -64,7 +64,7 @@ export default function Join({ goToMain }: { goToMain: () => void }) {
           <button type="submit" className={styles.button}>
             회원가입
           </button>
-          <button className={styles.button} onClick={goToMain}>
+          <button className={styles.button} onClick={setClick}>
             뒤로 가기
           </button>
         </div>

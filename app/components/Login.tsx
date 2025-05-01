@@ -3,7 +3,7 @@
 import { useState } from "react";
 import styles from "./Login.module.css";
 
-export default function Login({ goToMain }: { goToMain: () => void }) {
+export default function Login({ setClick }: { setClick: () => void }) {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
 
@@ -21,7 +21,7 @@ export default function Login({ goToMain }: { goToMain: () => void }) {
     })
       .then((res) => {
         console.log("로그인 성공");
-        goToMain();
+        setClick();
       })
       .catch((error) => {
         console.log("로그인 실패");
@@ -65,7 +65,7 @@ export default function Login({ goToMain }: { goToMain: () => void }) {
           <button type="submit" className={styles.button}>
             로그인
           </button>
-          <button className={styles.button} onClick={goToMain}>
+          <button className={styles.button} onClick={setClick}>
             뒤로 가기
           </button>
         </div>

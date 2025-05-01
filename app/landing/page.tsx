@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
 import Head from "next/head";
 import styles from "./Landing.module.css";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import SearchBox from "../components/SearchBox";
 import { useRouter } from "next/navigation";
 import Login from "../components/Login";
@@ -10,8 +10,8 @@ import Join from "../components/Join";
 
 export default function Home() {
   const router = useRouter();
-  const [click, setClick] = useState('');
-  
+  const [click, setClick] = useState("");
+
   return (
     <div className={styles.container}>
       <Head>
@@ -30,20 +30,34 @@ export default function Home() {
           width={300}
           src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FCOYlE%2FbtsND2B0UHb%2FCX0KSf0CkLUEKkNijUSnWK%2Fimg.png"
         />
-        
-        {
-          click === '' 
-            ? <>
-                <SearchBox />
-                <button className={styles.button} onClick={() => { setClick("Login") }}>로그인</button>
-                <button className={styles.button} onClick={() => { setClick("Join") }}>회원가입</button>
-              </>
-            : (
-              click === 'Login'
-                ? <Login setClick={() => setClick('')} />
-                : <Join setClick={() => setClick('')}/>
-            )
-        }
+
+        {click === "" ? (
+          <>
+            <Suspense>
+              <SearchBox />
+            </Suspense>
+            <button
+              className={styles.button}
+              onClick={() => {
+                setClick("Login");
+              }}
+            >
+              로그인
+            </button>
+            <button
+              className={styles.button}
+              onClick={() => {
+                setClick("Join");
+              }}
+            >
+              회원가입
+            </button>
+          </>
+        ) : click === "Login" ? (
+          <Login setClick={() => setClick("")} />
+        ) : (
+          <Join setClick={() => setClick("")} />
+        )}
       </main>
 
       <footer className={styles.footer}>그냥 잘하자</footer>

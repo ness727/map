@@ -3,12 +3,10 @@
 import "ol/ol.css";
 import SideBar from "./SideBar";
 
-import { View, Map, Feature } from "ol";
+import { View, Map } from "ol";
 import MainMap from "./MainMap";
-import { parseString } from "xml2js";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Vector as VectorLayer } from "ol/layer";
-import { OSM, Vector as SourceVector } from "ol/source";
 import { Draw } from "ol/interaction";
 import TileLayer from "ol/layer/Tile";
 import { fromLonLat } from "ol/proj";
@@ -16,7 +14,6 @@ import VectorSource from "ol/source/Vector";
 import { XYZ } from "ol/source";
 import Modal from "../components/RouteSaveModal";
 import Input from "../components/Input";
-import styles from "../components/Login.module.css";
 
 interface SaveFormat {
   categoryIdx: string;
