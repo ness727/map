@@ -28,7 +28,13 @@ export default function SideBar() {
         <Board />
         <Board />
       </div>
-      <CloseButton isClosed={isClosed} contentWidth={contentWidth} close={() => { setIsClosed(!isClosed) }}  />
+      <CloseButton
+        isClosed={isClosed}
+        contentWidth={contentWidth}
+        close={() => {
+          setIsClosed(!isClosed);
+        }}
+      />
     </div>
   );
 }

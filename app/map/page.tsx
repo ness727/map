@@ -6,7 +6,7 @@ import SideBar from "./SideBar";
 import { View, Map, Feature } from "ol";
 import MainMap from "./MainMap";
 import { parseString } from "xml2js";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Vector as VectorLayer } from "ol/layer";
 import { OSM, Vector as SourceVector } from "ol/source";
 import { Draw } from "ol/interaction";
@@ -14,6 +14,16 @@ import TileLayer from "ol/layer/Tile";
 import { fromLonLat } from "ol/proj";
 import VectorSource from "ol/source/Vector";
 import { XYZ } from "ol/source";
+import Modal from "../components/RouteSaveModal";
+import Input from "../components/Input";
+import styles from "../components/Login.module.css";
+
+interface SaveFormat {
+  categoryIdx: string;
+  name: string;
+  information: [];
+  description: string;
+}
 
 // 벡터 소스 및 레이어 생성
 const vectorSource = new VectorSource({
@@ -34,12 +44,38 @@ const draw = () =>
   });
 
 export default function MapPage() {
-  const [map, setMap] = useState<Map>();
-  const vectorSourceRef = useRef(new VectorSource());
+  const [map, setMap] = useState<Map>(new Map({}));
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [route, setRoute] = useState<[]>([]);
+  const [saveDate, setSaveData] = useState<SaveFormat>({
+    categoryIdx: "",
+    name: "",
+    information: [],
+    description: "",
+  });
+
+  // const handleChange = (e) => {
+  //   setSaveData((prev) => ({
+  //     ...prev,
+  //     categoryIdx: e.target.value,
+  //   }));
+  // };
 
   const clearLayer = () => {
-    vectorSourceRef.current.clear();
+    vectorSource.clear();
+    console.log("sdfsfs");
   };
+
+  const onOpen = useCallback(() => {
+    setIsModalOpen(true);
+  }, [isModalOpen]);
+
+  const changeRoute = useCallback(
+    (coords: []) => {
+      setRoute(coords);
+    },
+    [route]
+  );
 
   useEffect(() => {
     const initialMap = new Map({
@@ -67,10 +103,107 @@ export default function MapPage() {
     };
   }, []);
 
+  const saveRoute = async () => {
+    try {
+      saveDate.information = route;
+
+      const res = await fetch("https://modern-world.shop/api/v1/routes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(saveDate),
+      });
+
+      if (res.ok) {
+        console.log("요청 성공");
+      } else {
+        console.error("서버 응답 오류", res.status);
+      }
+
+      setSaveData({
+        categoryIdx: "",
+        name: "",
+        information: [],
+        description: "",
+      });
+    } catch (error) {
+      console.error("요청 실패", error);
+    }
+  };
+
   return (
     <div style={{ display: "flex", position: "relative" }}>
-      <SideBar map={map} lineDraw={draw()} clearLayer={clearLayer} />
+      <SideBar
+        map={map}
+        lineDraw={draw()}
+        clearLayer={clearLayer}
+        onOpen={onOpen}
+        changeRoute={changeRoute}
+      />
+
       <MainMap />
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h1>나의 경로 저장하기</h1>
+        <br />
+        <div>
+          <Input
+            id="categoryIdx"
+            value={saveDate.categoryIdx}
+            onChange={(e) => {
+              setSaveData((prev) => ({
+                ...prev,
+                categoryIdx: e.target.value,
+              }));
+            }}
+          >
+            카테고리 선택
+          </Input>
+          <Input
+            id="name"
+            value={saveDate.name}
+            onChange={(e) => {
+              setSaveData((prev) => ({
+                ...prev,
+                name: e.target.value,
+              }));
+            }}
+          >
+            경로명
+          </Input>
+          <Input
+            id="description"
+            value={saveDate.description}
+            onChange={(e) => {
+              setSaveData((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }));
+            }}
+          >
+            설명
+          </Input>
+        </div>
+
+        <button
+          onClick={() => {
+            setIsModalOpen(false);
+            saveRoute();
+          }}
+          style={{
+            marginTop: "10px",
+            padding: "8px 16px",
+            backgroundColor: "#0056b3",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          저장
+        </button>
+      </Modal>
     </div>
   );
 }

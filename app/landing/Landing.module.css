@@ -73,3 +73,20 @@
   cursor: pointer;
   transition: background-color 0.3s;
 }
+
+.button {
+  width: 150;
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 15;
+}
+
+.button:hover {
+  background-color: #3435aa;
+}

@@ -10,7 +10,8 @@ import CloseButton from "../components/CloseButton";
 import SearchBox from "../components/SearchBox";
 import Board from "../components/Board";
 
-export default function SideBar({ map, lineDraw, clearLayer }: { map: Map; lineDraw: Draw, clearLayer: () => void }) {
+export default function SideBar({ map, lineDraw, clearLayer, onOpen, changeRoute }: 
+  { map: Map; lineDraw: Draw, clearLayer: () => void, onOpen: () => void, changeRoute: (route: []) => void }) {
   const [isClosed, setIsClosed] = useState(false);
   const [isDrawBtnClicked, setIsDrawBtnClicked] = useState(false);
   const contentWidth = 400;
@@ -27,30 +28,16 @@ export default function SideBar({ map, lineDraw, clearLayer }: { map: Map; lineD
       setIsDrawBtnClicked(false);
       map.removeInteraction(lineDraw);
       clearLayer();
+      onOpen();
 
       const feature = event.feature;
       const geojsonFormat = new GeoJSON();
       const geojson = geojsonFormat.writeFeature(feature);
 
+      const geoObject = JSON.parse(geojson);
+
       console.log("GeoJSON:", geojson);
-
-      try {
-        const res = await fetch("http://localhost:8080/route", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(geojson),
-        });
-
-        if (res.ok) {
-          console.log("요청 성공");
-        } else {
-          console.error("서버 응답 오류", res.status);
-        }
-      } catch (error) {
-        console.error("요청 실패", error);
-      }
+      changeRoute(geoObject.geometry.coordinates);
     };
 
     lineDraw.on("drawend", handleDrawEnd);
