@@ -28,7 +28,7 @@ export default function Home() {
           alt=""
           height={200}
           width={300}
-          src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FCOYlE%2FbtsND2B0UHb%2FCX0KSf0CkLUEKkNijUSnWK%2Fimg.png"
+          src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcSYC7R%2FbtsNnkJi3tH%2FqO3XaO8K3KMKuk8gg5wKKk%2Fimg.jpg"
         />
 
         {click === "" ? (
