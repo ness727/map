@@ -41,7 +41,7 @@ const draw = () =>
   });
 
 export default function MapPage() {
-  const [map, setMap] = useState<Map>(new Map({}));
+  const [map, setMap] = useState<Map | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [route, setRoute] = useState<[]>([]);
   const [saveDate, setSaveData] = useState<SaveFormat>({
@@ -131,13 +131,15 @@ export default function MapPage() {
 
   return (
     <div style={{ display: "flex", position: "relative" }}>
-      <SideBar
-        map={map}
-        lineDraw={draw()}
-        clearLayer={clearLayer}
-        onOpen={onOpen}
-        changeRoute={changeRoute}
-      />
+      {map && (
+        <SideBar
+          map={map}
+          lineDraw={draw()}
+          clearLayer={clearLayer}
+          onOpen={onOpen}
+          changeRoute={changeRoute}
+        />
+      )}
 
       <MainMap />
 

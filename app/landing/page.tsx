@@ -4,12 +4,10 @@ import Head from "next/head";
 import styles from "./Landing.module.css";
 import React, { Suspense, useState } from "react";
 import SearchBox from "../components/SearchBox";
-import { useRouter } from "next/navigation";
 import Login from "../components/Login";
 import Join from "../components/Join";
 
 export default function Home() {
-  const router = useRouter();
   const [click, setClick] = useState("");
 
   return (
