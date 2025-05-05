@@ -16,10 +16,9 @@
   left: 0; /* 위치 설정 */
   right: 0; /* 위치 설정 */
   bottom: 0; /* 위치 설정 */
-  background-image: url("https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcSYC7R%2FbtsNnkJi3tH%2FqO3XaO8K3KMKuk8gg5wKKk%2Fimg.jpg");
-  filter: brightness(0.4);
-  background-size: cover;
+  background-image: url(https://blog.kakaocdn.net/dn/cSYC7R/btsNnkJi3tH/qO3XaO8K3KMKuk8gg5wKKk/img.jpg);
   filter: blur(5px);
+  background-size: cover;
 }
 
 .main {
@@ -75,7 +74,7 @@
 }
 
 .button {
-  width: 150;
+  width: 150px;
   padding: 0.75rem;
   background-color: #007bff;
   color: white;
@@ -83,8 +82,8 @@
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease;
-  margin-top: 15;
+  /* transition: background 0.3s ease; */
+  margin-top: 15px;
 }
 
 .button:hover {

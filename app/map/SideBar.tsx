@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
-import { View, Map } from "ol";
+import { Map } from "ol";
 import { GeoJSON } from "ol/format";
 import { Draw } from "ol/interaction";
 
@@ -10,8 +10,19 @@ import CloseButton from "../components/CloseButton";
 import SearchBox from "../components/SearchBox";
 import Board from "../components/Board";
 
-export default function SideBar({ map, lineDraw, clearLayer, onOpen, changeRoute }: 
-  { map: Map; lineDraw: Draw, clearLayer: () => void, onOpen: () => void, changeRoute: (route: []) => void }) {
+export default function SideBar({
+  map,
+  lineDraw,
+  clearLayer,
+  onOpen,
+  changeRoute,
+}: {
+  map: Map;
+  lineDraw: Draw;
+  clearLayer: () => void;
+  onOpen: () => void;
+  changeRoute: (route: []) => void;
+}) {
   const [isClosed, setIsClosed] = useState(false);
   const [isDrawBtnClicked, setIsDrawBtnClicked] = useState(false);
   const contentWidth = 400;
@@ -57,11 +68,13 @@ export default function SideBar({ map, lineDraw, clearLayer, onOpen, changeRoute
           display: isClosed ? "none" : "",
         }}
       >
-        {
-          isDrawBtnClicked 
-            ? <h1>마우스 더블 클릭으로 경로를 완성하세요!!</h1>
-            : <button className={styles.button} onClick={startDraw}>내 경로 만들기</button>
-        }
+        {isDrawBtnClicked ? (
+          <h1>마우스 더블 클릭으로 경로를 완성하세요!!</h1>
+        ) : (
+          <button className={styles.button} onClick={startDraw}>
+            내 경로 만들기
+          </button>
+        )}
 
         <div className={styles.title}>찾고 싶은 경로를 입력하세요</div>
         <SearchBox />
@@ -70,7 +83,13 @@ export default function SideBar({ map, lineDraw, clearLayer, onOpen, changeRoute
         <Board />
         <Board />
       </div>
-      <CloseButton isClosed={isClosed} contentWidth={contentWidth} close={() => { setIsClosed(!isClosed) }}  />
+      <CloseButton
+        isClosed={isClosed}
+        contentWidth={contentWidth}
+        close={() => {
+          setIsClosed(!isClosed);
+        }}
+      />
     </div>
   );
 }

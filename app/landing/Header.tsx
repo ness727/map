@@ -1,4 +1,4 @@
-import styles from './Header.module.css';
+import styles from "./Header.module.css";
 
 export default function Header() {
   return (
@@ -7,4 +7,4 @@ export default function Header() {
       <button className={styles.loginButton}>로그인</button>
     </header>
   );
-};
+}

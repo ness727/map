@@ -13,7 +13,7 @@ import { fromLonLat } from "ol/proj";
 import VectorSource from "ol/source/Vector";
 import { XYZ } from "ol/source";
 import Modal from "../components/RouteSaveModal";
-import Input from "../components/Input";
+import Input from "./Input";
 
 interface SaveFormat {
   categoryIdx: string;
