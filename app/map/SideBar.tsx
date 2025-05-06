@@ -9,6 +9,27 @@ import styles from "./SideBar.module.css";
 import CloseButton from "../components/CloseButton";
 import SearchBox from "../components/SearchBox";
 import Board from "../components/Board";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { transform } from "ol/proj";
+
+export type Route = {
+  routeIdx: number;
+  userIdx: number;
+  categoryIdx: number;
+  name: string;
+  information: [number, number][];
+  description: string;
+  createdAt: string;
+  updatedAt: string | null;
+};
+
+export type RouteResponse = {
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  content: Route[];
+};
 
 export default function SideBar({
   map,
@@ -23,6 +44,14 @@ export default function SideBar({
   onOpen: () => void;
   changeRoute: (route: []) => void;
 }) {
+  const router = useRouter();
+  const pathName = usePathname();
+  const searchParams = useSearchParams();
+  const [keyword, setKeyword] = useState<string>(
+    searchParams.get("name") ?? ""
+  );
+  const [data, setData] = useState<RouteResponse | null>(null); // 검색 결과 데이터
+
   const [isClosed, setIsClosed] = useState(false);
   const [isDrawBtnClicked, setIsDrawBtnClicked] = useState(false);
   const contentWidth = 400;
@@ -48,7 +77,12 @@ export default function SideBar({
       const geoObject = JSON.parse(geojson);
 
       console.log("GeoJSON:", geojson);
-      changeRoute(geoObject.geometry.coordinates);
+
+      const transformed = geoObject.geometry.coordinates.map((item: any) =>
+        transform(item, "EPSG:3857", "EPSG:4326")
+      );
+
+      changeRoute(transformed);
     };
 
     lineDraw.on("drawend", handleDrawEnd);
@@ -57,6 +91,23 @@ export default function SideBar({
       lineDraw.un("drawend", handleDrawEnd);
     };
   }, [lineDraw, map]);
+
+  // 초기 경로 검색 리스트 조회
+  useEffect(() => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes` +
+        `?name=${keyword}`
+    )
+      .then((res) => res.json())
+      .then((json: RouteResponse) => {
+        setData(json);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.error("Error fetching routes:", err);
+      });
+    router.replace(pathName);
+  }, [keyword]);
 
   return (
     <div className={styles.outer}>
@@ -77,11 +128,11 @@ export default function SideBar({
         )}
 
         <div className={styles.title}>찾고 싶은 경로를 입력하세요</div>
-        <SearchBox />
-        <Board />
-        <Board />
-        <Board />
-        <Board />
+        <SearchBox setName={(name: string) => setKeyword(name)} />
+        {data &&
+          data.content.map((item, index) => {
+            return <Board content={item} key={index} />;
+          })}
       </div>
       <CloseButton
         isClosed={isClosed}

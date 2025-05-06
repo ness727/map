@@ -1,6 +1,18 @@
 .container {
-    border: 2px solid #007BFF;
-    border-radius: 8px;
-    margin: 10px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  margin: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.textDiv {
+  text-align: left;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 1.1rem;
 }

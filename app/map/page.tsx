@@ -104,13 +104,16 @@ export default function MapPage() {
     try {
       saveDate.information = route;
 
-      const res = await fetch("https://modern-world.shop/api/v1/routes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(saveDate),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(saveDate),
+        }
+      );
 
       if (res.ok) {
         console.log("요청 성공");
@@ -119,10 +122,10 @@ export default function MapPage() {
       }
 
       setSaveData({
-        categoryIdx: "",
-        name: "",
-        information: [],
-        description: "",
+        categoryIdx: saveDate.categoryIdx,
+        name: saveDate.name,
+        information: saveDate.information,
+        description: saveDate.description,
       });
     } catch (error) {
       console.error("요청 실패", error);
@@ -130,7 +133,14 @@ export default function MapPage() {
   };
 
   return (
-    <div style={{ display: "flex", position: "relative" }}>
+    <div
+      style={{
+        display: "flex",
+        position: "relative",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
       {map && (
         <SideBar
           map={map}
