@@ -32,7 +32,7 @@ export default function Home() {
         {click === "" ? (
           <>
             <Suspense>
-              <SearchBox />
+              <SearchBox setName={() => {}} />
             </Suspense>
             <button
               className={styles.button}
