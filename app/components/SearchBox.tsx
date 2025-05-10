@@ -22,7 +22,7 @@ export default function SearchBox({
     }
   }, []);
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (pathName === "/") {
         if (keyword === "") router.push("/map");

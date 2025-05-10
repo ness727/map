@@ -4,7 +4,6 @@ import "ol/ol.css";
 import SideBar from "./SideBar";
 
 import { View, Map } from "ol";
-import MainMap from "./MainMap";
 import React, { useCallback, useEffect, useState } from "react";
 import { Vector as VectorLayer } from "ol/layer";
 import { Draw } from "ol/interaction";
@@ -16,7 +15,6 @@ import Modal from "../components/RouteSaveModal";
 import Input from "./Input";
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
-import { useRouter } from "next/navigation";
 
 interface SaveFormat {
   categoryIdx: string;
