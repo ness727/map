@@ -14,6 +14,15 @@ import { fromLonLat, transform } from "ol/proj";
 import { LineString } from "ol/geom";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
+import Modal from "../components/RouteSaveModal";
+import Input from "./Input";
+
+interface SaveFormat {
+  categoryIdx: string;
+  name: string;
+  information: [];
+  description: string;
+}
 
 export type Route = {
   routeIdx: number;
@@ -38,13 +47,13 @@ export default function SideBar({
   map,
   lineDraw,
   clearLayer,
-  onOpen,
+  route,
   changeRoute,
 }: {
   map: Map;
   lineDraw: Draw;
   clearLayer: () => void;
-  onOpen: () => void;
+  route: [];
   changeRoute: (route: []) => void;
 }) {
   const router = useRouter();
@@ -59,9 +68,50 @@ export default function SideBar({
   const [isDrawBtnClicked, setIsDrawBtnClicked] = useState(false);
   const contentWidth = 400;
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [saveDate, setSaveData] = useState<SaveFormat>({
+    categoryIdx: "",
+    name: "",
+    information: [],
+    description: "",
+  });
+
   const startDraw = () => {
     map.addInteraction(lineDraw);
     setIsDrawBtnClicked(!isDrawBtnClicked);
+  };
+
+  const saveRoute = async () => {
+    try {
+      saveDate.information = route;
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(saveDate),
+        }
+      );
+
+      if (res.ok) {
+        console.log("요청 성공");
+      } else {
+        console.error("서버 응답 오류", res.status);
+      }
+
+      setKeyword(saveDate.name);
+      setSaveData({
+        categoryIdx: "",
+        name: "",
+        information: [],
+        description: "",
+      });
+    } catch (error) {
+      console.error("요청 실패", error);
+    }
   };
 
   const showRoute = (information: [number, number][]) => {
@@ -91,7 +141,8 @@ export default function SideBar({
       setIsDrawBtnClicked(false);
       map.removeInteraction(lineDraw);
       clearLayer();
-      onOpen();
+      // onOpen();
+      setIsModalOpen(true);
 
       const feature = event.feature;
       const geojsonFormat = new GeoJSON();
@@ -164,6 +215,66 @@ export default function SideBar({
           setIsClosed(!isClosed);
         }}
       />
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h1>나의 경로 저장하기</h1>
+        <br />
+        <div>
+          <Input
+            id="categoryIdx"
+            value={saveDate.categoryIdx}
+            onChange={(e) => {
+              setSaveData((prev) => ({
+                ...prev,
+                categoryIdx: e.target.value,
+              }));
+            }}
+          >
+            카테고리 선택
+          </Input>
+          <Input
+            id="name"
+            value={saveDate.name}
+            onChange={(e) => {
+              setSaveData((prev) => ({
+                ...prev,
+                name: e.target.value,
+              }));
+            }}
+          >
+            경로명
+          </Input>
+          <Input
+            id="description"
+            value={saveDate.description}
+            onChange={(e) => {
+              setSaveData((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }));
+            }}
+          >
+            설명
+          </Input>
+        </div>
+
+        <button
+          onClick={() => {
+            setIsModalOpen(false);
+            saveRoute();
+          }}
+          style={{
+            marginTop: "10px",
+            padding: "8px 16px",
+            backgroundColor: "#0056b3",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          저장
+        </button>
+      </Modal>
     </div>
   );
 }
