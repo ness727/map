@@ -14,6 +14,9 @@ import VectorSource from "ol/source/Vector";
 import { XYZ } from "ol/source";
 import Modal from "../components/RouteSaveModal";
 import Input from "./Input";
+import Style from "ol/style/Style";
+import Stroke from "ol/style/Stroke";
+import { useRouter } from "next/navigation";
 
 interface SaveFormat {
   categoryIdx: string;
@@ -21,24 +24,6 @@ interface SaveFormat {
   information: [];
   description: string;
 }
-
-// 벡터 소스 및 레이어 생성
-const vectorSource = new VectorSource({
-  wrapX: false,
-  features: [],
-});
-
-// 벡터 레이어 생성
-const vectorLayer = new VectorLayer({
-  source: vectorSource,
-});
-
-// 화면에 도형 그리기
-const draw = () =>
-  new Draw({
-    source: vectorSource,
-    type: "LineString",
-  });
 
 export default function MapPage() {
   const [map, setMap] = useState<Map | null>(null);
@@ -51,16 +36,55 @@ export default function MapPage() {
     description: "",
   });
 
-  // const handleChange = (e) => {
-  //   setSaveData((prev) => ({
-  //     ...prev,
-  //     categoryIdx: e.target.value,
-  //   }));
-  // };
+  // 벡터 소스 및 레이어 생성
+  const vectorSource = new VectorSource({
+    wrapX: false,
+    features: [],
+  });
+
+  // 스타일: 외곽선 (outline) 효과
+  const outlineStyle = new Style({
+    stroke: new Stroke({
+      color: "white", // 외곽선 색상
+      width: 8, // 외곽선 두께
+    }),
+  });
+
+  // 선 스타일 지정
+  const lineStyle = new Style({
+    stroke: new Stroke({
+      color: "#0056b3",
+      width: 5,
+    }),
+  });
+
+  // 벡터 레이어 생성
+  const vectorLayer = new VectorLayer({
+    source: vectorSource,
+    style: [outlineStyle, lineStyle],
+  });
+
+  // 화면에 도형 그리기
+  const draw = () =>
+    new Draw({
+      source: vectorSource,
+      type: "LineString",
+    });
 
   const clearLayer = () => {
-    vectorSource.clear();
-    console.log("sdfsfs");
+    if (map != null) {
+      const layers = map.getLayers().getArray();
+      const vectorLayer = layers.find(
+        (layer) => layer instanceof VectorLayer
+      ) as VectorLayer<VectorSource>;
+
+      if (vectorLayer) {
+        const source = vectorLayer.getSource();
+        source?.clear();
+      } else {
+        console.error("벡터레이어 조회 오류");
+      }
+    }
   };
 
   const onOpen = useCallback(() => {
@@ -122,10 +146,10 @@ export default function MapPage() {
       }
 
       setSaveData({
-        categoryIdx: saveDate.categoryIdx,
-        name: saveDate.name,
-        information: saveDate.information,
-        description: saveDate.description,
+        categoryIdx: "",
+        name: "",
+        information: [],
+        description: "",
       });
     } catch (error) {
       console.error("요청 실패", error);
@@ -151,7 +175,7 @@ export default function MapPage() {
         />
       )}
 
-      <MainMap />
+      <div id="map" style={{ width: "100vw", height: "100vh" }}></div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h1>나의 경로 저장하기</h1>

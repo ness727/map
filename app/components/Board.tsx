@@ -1,7 +1,13 @@
 import { Route } from "../map/SideBar";
 import styles from "./Board.module.css";
 
-export default function Board({ content }: { content: Route }) {
+export default function Board({
+  content,
+  showRoute,
+}: {
+  content: Route;
+  showRoute: (information: [number, number][]) => void;
+}) {
   const dateFormat = (date: string) => {
     return date.replace("T", " ").slice(0, 16);
   };
@@ -13,8 +19,13 @@ export default function Board({ content }: { content: Route }) {
         <div>{content.description}</div>
         <div>{dateFormat(content.createdAt)}</div>
       </div>
-      <div>
-        <button>보기</button>
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.button}
+          onClick={() => showRoute(content.information)}
+        >
+          보기
+        </button>
       </div>
     </div>
   );

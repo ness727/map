@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Map } from "ol";
+import { Feature, Map } from "ol";
 import { GeoJSON } from "ol/format";
 import { Draw } from "ol/interaction";
 
@@ -10,7 +10,10 @@ import CloseButton from "../components/CloseButton";
 import SearchBox from "../components/SearchBox";
 import Board from "../components/Board";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { transform } from "ol/proj";
+import { fromLonLat, transform } from "ol/proj";
+import { LineString } from "ol/geom";
+import VectorSource from "ol/source/Vector";
+import VectorLayer from "ol/layer/Vector";
 
 export type Route = {
   routeIdx: number;
@@ -59,6 +62,26 @@ export default function SideBar({
   const startDraw = () => {
     map.addInteraction(lineDraw);
     setIsDrawBtnClicked(!isDrawBtnClicked);
+  };
+
+  const showRoute = (information: [number, number][]) => {
+    clearLayer();
+
+    const lineCoordinates = information.map((coord) => fromLonLat(coord));
+    const lineString = new LineString(lineCoordinates);
+    const feature = new Feature({ geometry: lineString });
+
+    const layers = map.getLayers().getArray();
+    const vectorLayer = layers.find(
+      (layer) => layer instanceof VectorLayer
+    ) as VectorLayer<VectorSource>;
+
+    if (vectorLayer) {
+      const source = vectorLayer.getSource();
+      source?.addFeature(feature);
+    } else {
+      console.error("벡터레이어 조회 오류");
+    }
   };
 
   useEffect(() => {
@@ -131,7 +154,7 @@ export default function SideBar({
         <SearchBox setName={(name: string) => setKeyword(name)} />
         {data &&
           data.content.map((item, index) => {
-            return <Board content={item} key={index} />;
+            return <Board content={item} key={index} showRoute={showRoute} />;
           })}
       </div>
       <CloseButton

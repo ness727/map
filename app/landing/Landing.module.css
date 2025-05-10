@@ -17,7 +17,7 @@
   right: 0; /* 위치 설정 */
   bottom: 0; /* 위치 설정 */
   background-image: url(https://blog.kakaocdn.net/dn/cSYC7R/btsNnkJi3tH/qO3XaO8K3KMKuk8gg5wKKk/img.jpg);
-  filter: blur(5px);
+  filter: blur(5px) brightness(0.95);
   background-size: cover;
 }
 
@@ -27,7 +27,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #007bff;
 }
 
 .title {

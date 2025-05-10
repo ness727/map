@@ -7,26 +7,30 @@ export default function Login({ setClick }: { setClick: () => void }) {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("로그인 시도:", { id, pwd });
-    // TODO: 로그인 처리 로직 추가
-  };
 
-  async function login() {
-    const response = await fetch("http://localhost:8080/login", {
+    // 로그인 요청
+    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: JSON.stringify({ id: id, pwd: pwd }),
     })
       .then((res) => {
-        console.log("로그인 성공");
-        setClick();
+        if (res.ok) {
+          console.log("로그인 성공");
+          setClick();
+        } else {
+          console.log("로그인 실패");
+          setId("");
+          setPwd("");
+        }
       })
       .catch((error) => {
-        console.log("로그인 실패");
+        console.log("요청 실패");
       });
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -54,7 +58,7 @@ export default function Login({ setClick }: { setClick: () => void }) {
           <input
             className={styles.input}
             id="pwd"
-            type="pwd"
+            type="password"
             value={pwd}
             onChange={(e) => setPwd(e.target.value)}
             required

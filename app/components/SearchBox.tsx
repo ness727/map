@@ -22,14 +22,27 @@ export default function SearchBox({
     }
   }, []);
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (pathName === "/") {
+        if (keyword === "") router.push("/map");
+        else router.push("/map?name=" + keyword);
+      } else {
+        // 맵 내부에서
+        setName(keyword);
+      }
+    }
+  };
+
   return (
     <div className={styles.container}>
       <input
         type="text"
         placeholder="검색어를 입력하세요"
+        className={styles.searchBox}
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
-        className={styles.searchBox}
+        onKeyDown={handleKeyDown}
       />
       <input
         className={styles.button}

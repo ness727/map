@@ -7,25 +7,28 @@ export default function Join({ setClick }: { setClick: () => void }) {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("로그인 시도:", { id, pwd });
-    // TODO: 로그인 처리 로직 추가
-  };
 
-  async function join() {
-    const response = await fetch("http://localhost:8080/join", {
+    // 회원가입 요청
+    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/join`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: JSON.stringify({ id: id, pwd: pwd }),
     })
       .then((res) => {
-        console.log("가입 성공");
+        if (res.ok) {
+          console.log("가입 성공");
+          setClick();
+        } else {
+          console.log("가입 실패");
+        }
       })
       .catch((error) => {
-        console.log("가입 실패");
+        console.log("가입 요청 실패");
       });
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -39,7 +42,7 @@ export default function Join({ setClick }: { setClick: () => void }) {
           <input
             className={styles.input}
             id="id"
-            type="id"
+            type="text"
             value={id}
             onChange={(e) => setId(e.target.value)}
             required
@@ -53,7 +56,7 @@ export default function Join({ setClick }: { setClick: () => void }) {
           <input
             className={styles.input}
             id="pwd"
-            type="pwd"
+            type="text"
             value={pwd}
             onChange={(e) => setPwd(e.target.value)}
             required
@@ -62,7 +65,7 @@ export default function Join({ setClick }: { setClick: () => void }) {
 
         <div>
           <button type="submit" className={styles.button}>
-            회원가입
+            가입하기
           </button>
           <button className={styles.button} onClick={setClick}>
             뒤로 가기
