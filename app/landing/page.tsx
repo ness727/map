@@ -4,8 +4,8 @@ import Head from "next/head";
 import styles from "./Landing.module.css";
 import React, { Suspense, useState } from "react";
 import SearchBox from "../components/SearchBox";
-import Login from "../components/Login";
-import Join from "../components/Join";
+import Login from "./Login";
+import Join from "./Join";
 
 export default function Home() {
   const [click, setClick] = useState("");
@@ -26,6 +26,7 @@ export default function Home() {
           alt=""
           height={200}
           width={300}
+          style={{ margin: 30 }}
           src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FCOYlE%2FbtsND2B0UHb%2FCX0KSf0CkLUEKkNijUSnWK%2Fimg.png"
         />
 
@@ -39,6 +40,7 @@ export default function Home() {
               onClick={() => {
                 setClick("Login");
               }}
+              style={{ marginTop: 70 }}
             >
               로그인
             </button>
@@ -58,7 +60,7 @@ export default function Home() {
         )}
       </main>
 
-      <footer className={styles.footer}>그냥 잘하자</footer>
+      {/* <footer className={styles.footer}>그냥 잘하자</footer> */}
     </div>
   );
 }

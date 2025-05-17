@@ -11,26 +11,30 @@ import SearchBox from "../components/SearchBox";
 import Board from "../components/Board";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { fromLonLat, transform } from "ol/proj";
-import { LineString } from "ol/geom";
+import { LineString, Point } from "ol/geom";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
 import Modal from "../components/RouteSaveModal";
 import Input from "./Input";
+import Select from "./Select";
 
 interface SaveFormat {
   categoryIdx: string;
   name: string;
   information: [];
   description: string;
+  distance: number;
 }
 
 export type Route = {
   routeIdx: number;
   userIdx: number;
   categoryIdx: number;
+  categoryName: string;
   name: string;
   information: [number, number][];
   description: string;
+  distance: number;
   createdAt: string;
   updatedAt: string | null;
 };
@@ -41,6 +45,11 @@ export type RouteResponse = {
   totalElements: number;
   totalPages: number;
   content: Route[];
+};
+
+type ComboType = {
+  categoryIdx: number;
+  name: string;
 };
 
 export default function SideBar({
@@ -69,12 +78,30 @@ export default function SideBar({
   const contentWidth = 400;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [saveDate, setSaveData] = useState<SaveFormat>({
+  const [saveData, setSaveData] = useState<SaveFormat>({
     categoryIdx: "",
     name: "",
     information: [],
     description: "",
+    distance: 0.1,
   });
+
+  const [comboData, setComboData] = useState<ComboType[]>([]);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/categories`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((body) => {
+        body.json().then((json) => {
+          setComboData(json);
+        });
+      })
+      .catch(() => {});
+  }, []);
 
   const startDraw = () => {
     map.addInteraction(lineDraw);
@@ -83,7 +110,7 @@ export default function SideBar({
 
   const saveRoute = async () => {
     try {
-      saveDate.information = route;
+      saveData.information = route;
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes`,
@@ -92,7 +119,7 @@ export default function SideBar({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(saveDate),
+          body: JSON.stringify(saveData),
         }
       );
 
@@ -102,12 +129,13 @@ export default function SideBar({
         console.error("서버 응답 오류", res.status);
       }
 
-      setKeyword(saveDate.name);
+      setKeyword(saveData.name);
       setSaveData({
         categoryIdx: "",
         name: "",
         information: [],
         description: "",
+        distance: 0.1,
       });
     } catch (error) {
       console.error("요청 실패", error);
@@ -132,6 +160,14 @@ export default function SideBar({
     } else {
       console.error("벡터레이어 조회 오류");
     }
+  };
+
+  const moveMap = (xy: [number, number]) => {
+    map
+      .getView()
+      .setCenter(
+        new Point(xy).transform("EPSG:4326", "EPSG:3857").getCoordinates()
+      );
   };
 
   useEffect(() => {
@@ -202,11 +238,27 @@ export default function SideBar({
         )}
 
         <div className={styles.title}>찾고 싶은 경로를 입력하세요</div>
-        <SearchBox setName={(name: string) => setKeyword(name)} />
-        {data &&
-          data.content.map((item, index) => {
-            return <Board content={item} key={index} showRoute={showRoute} />;
-          })}
+        <div className={styles.userSelect}>
+          <SearchBox setName={(name: string) => setKeyword(name)} />
+          <div className={styles.categoryDiv}>
+            <div className={styles.categoryText}>카테고리</div>
+            <Select saveData="" onChange={(e) => {}} comboData={comboData} />
+          </div>
+
+          <hr className={styles.searchHr} />
+
+          {data &&
+            data.content.map((item, index) => {
+              return (
+                <Board
+                  content={item}
+                  key={index}
+                  showRoute={showRoute}
+                  moveMap={() => moveMap(item.information[0])}
+                />
+              );
+            })}
+        </div>
       </div>
       <CloseButton
         isClosed={isClosed}
@@ -218,22 +270,24 @@ export default function SideBar({
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h1>나의 경로 저장하기</h1>
         <br />
-        <div>
-          <Input
-            id="categoryIdx"
-            value={saveDate.categoryIdx}
-            onChange={(e) => {
-              setSaveData((prev) => ({
-                ...prev,
-                categoryIdx: e.target.value,
-              }));
-            }}
-          >
-            카테고리 선택
-          </Input>
+        <div className={styles.modalMiddleContainer}>
+          <div className={styles.selectDiv}>
+            카테고리
+            <Select
+              saveData={saveData}
+              onChange={(e) => {
+                setSaveData((prev) => ({
+                  ...prev,
+                  categoryIdx: e.target.value,
+                }));
+              }}
+              comboData={comboData}
+            />
+          </div>
           <Input
             id="name"
-            value={saveDate.name}
+            value={saveData.name}
+            type="text"
             onChange={(e) => {
               setSaveData((prev) => ({
                 ...prev,
@@ -243,18 +297,20 @@ export default function SideBar({
           >
             경로명
           </Input>
-          <Input
-            id="description"
-            value={saveDate.description}
-            onChange={(e) => {
-              setSaveData((prev) => ({
-                ...prev,
-                description: e.target.value,
-              }));
-            }}
-          >
+          <div className={styles.textareaContainer}>
             설명
-          </Input>
+            <textarea
+              className={styles.textarea}
+              id="description"
+              value={saveData.description}
+              onChange={(e) => {
+                setSaveData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }));
+              }}
+            />
+          </div>
         </div>
 
         <button

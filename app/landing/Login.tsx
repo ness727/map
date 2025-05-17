@@ -12,10 +12,10 @@ export default function Login({ setClick }: { setClick: () => void }) {
     console.log("로그인 시도:", { id, pwd });
 
     // 로그인 요청
-    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/login`, {
+    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: JSON.stringify({ id: id, pwd: pwd }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: id, userPassword: pwd }),
     })
       .then((res) => {
         if (res.ok) {
@@ -39,7 +39,7 @@ export default function Login({ setClick }: { setClick: () => void }) {
 
         <div className={styles.inputGroup}>
           <label className={styles.label} htmlFor="id">
-            이메일
+            아이디
           </label>
           <input
             className={styles.input}

@@ -6,20 +6,29 @@ import styles from "./Login.module.css";
 export default function Join({ setClick }: { setClick: () => void }) {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
+  const [nickname, setNickname] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("로그인 시도:", { id, pwd });
 
     // 회원가입 요청
-    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/join`, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: JSON.stringify({ id: id, pwd: pwd }),
-    })
+    await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/register`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: id,
+          userPassword: pwd,
+          nickname: nickname,
+        }),
+      }
+    )
       .then((res) => {
         if (res.ok) {
           console.log("가입 성공");
+          alert("가입에 성공했습니다!");
           setClick();
         } else {
           console.log("가입 실패");
@@ -56,9 +65,23 @@ export default function Join({ setClick }: { setClick: () => void }) {
           <input
             className={styles.input}
             id="pwd"
-            type="text"
+            type="password"
             value={pwd}
             onChange={(e) => setPwd(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label} htmlFor="nickname">
+            닉네임
+          </label>
+          <input
+            className={styles.input}
+            id="nickname"
+            type="text"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
             required
           />
         </div>

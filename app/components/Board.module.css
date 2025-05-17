@@ -5,17 +5,23 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: space-between;
-  padding: 20px;
   background-color: white;
 }
 
 .textDiv {
+  padding: 20px;
   text-align: left;
 }
 
 .title {
   font-weight: 600;
   font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.category {
+  font-style: italic;
+  margin-top: 5px;
 }
 
 .buttonContainer {
@@ -25,15 +31,21 @@
 
 .button {
   width: 100%;
-  padding: 0.75rem;
+  height: 100%;
+  padding: 0rem 1rem;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-right: 5px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .button:hover {
   background-color: #3435aa;
+}
+
+.date {
+  margin-top: 10px;
+  font-size: 0.8rem;
 }
