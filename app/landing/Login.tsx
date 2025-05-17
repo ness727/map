@@ -16,6 +16,7 @@ export default function Login({ setClick }: { setClick: () => void }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId: id, userPassword: pwd }),
+      credentials: "include",
     })
       .then((res) => {
         if (res.ok) {
