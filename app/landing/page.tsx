@@ -6,6 +6,7 @@ import React, { Suspense, useState } from "react";
 import SearchBox from "../components/SearchBox";
 import Login from "./Login";
 import Join from "./Join";
+import Cookies from "js-cookie";
 
 export default function Home() {
   const [click, setClick] = useState("");
@@ -35,23 +36,30 @@ export default function Home() {
             <Suspense>
               <SearchBox setName={() => {}} />
             </Suspense>
-            <button
-              className={styles.button}
-              onClick={() => {
-                setClick("Login");
-              }}
-              style={{ marginTop: 70 }}
-            >
-              로그인
-            </button>
-            <button
-              className={styles.button}
-              onClick={() => {
-                setClick("Join");
-              }}
-            >
-              회원가입
-            </button>
+
+            {Cookies.get("JSESSIONID") !== null ? (
+              <>
+                <button
+                  className={styles.button}
+                  onClick={() => {
+                    setClick("Login");
+                  }}
+                  style={{ marginTop: 70 }}
+                >
+                  로그인
+                </button>
+                <button
+                  className={styles.button}
+                  onClick={() => {
+                    setClick("Join");
+                  }}
+                >
+                  회원가입
+                </button>
+              </>
+            ) : (
+              <></>
+            )}
           </>
         ) : click === "Login" ? (
           <Login setClick={() => setClick("")} />

@@ -17,6 +17,7 @@ import VectorLayer from "ol/layer/Vector";
 import Modal from "../components/RouteSaveModal";
 import Input from "./Input";
 import Select from "./Select";
+import Cookies from "js-cookie";
 
 interface SaveFormat {
   categoryIdx: string;
@@ -229,12 +230,18 @@ export default function SideBar({
           display: isClosed ? "none" : "",
         }}
       >
-        {isDrawBtnClicked ? (
-          <h1>마우스 더블 클릭으로 경로를 완성하세요!!</h1>
+        {Cookies.get("JSESSIONID") !== null ? (
+          <>
+            {isDrawBtnClicked ? (
+              <h1>마우스 더블 클릭으로 경로를 완성하세요!!</h1>
+            ) : (
+              <button className={styles.button} onClick={startDraw}>
+                내 경로 만들기
+              </button>
+            )}
+          </>
         ) : (
-          <button className={styles.button} onClick={startDraw}>
-            내 경로 만들기
-          </button>
+          <></>
         )}
 
         <div className={styles.title}>찾고 싶은 경로를 입력하세요</div>
