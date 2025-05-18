@@ -121,6 +121,7 @@ export default function SideBar({
             "Content-Type": "application/json",
           },
           body: JSON.stringify(saveData),
+          credentials: "include",
         }
       );
 
