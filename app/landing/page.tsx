@@ -17,7 +17,7 @@ export default function Home() {
   }, []);
 
   // 클라이언트에서만 쿠키 확인
-  const isLoggedIn = Cookies.get("JSESSIONID") !== undefined;
+  const isLoggedIn = Cookies.get("login") !== undefined;
   if (!isClient) return null;
 
   return (

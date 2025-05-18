@@ -205,7 +205,7 @@ export default function SideBar({
 
   // 초기 경로 검색 리스트 조회
   useEffect(() => {
-    console.log("JSESSIONID:", Cookies.get("JSESSIONID"));
+    console.log("login:", Cookies.get("login"));
 
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes` +
@@ -232,7 +232,7 @@ export default function SideBar({
           display: isClosed ? "none" : "",
         }}
       >
-        {Cookies.get("JSESSIONID") != undefined ? (
+        {Cookies.get("login") != undefined ? (
           <>
             {isDrawBtnClicked ? (
               <h1>마우스 더블 클릭으로 경로를 완성하세요!!</h1>

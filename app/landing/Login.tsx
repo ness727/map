@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styles from "./Login.module.css";
+import Cookies from "js-cookie";
 
 export default function Login({ setClick }: { setClick: () => void }) {
   const [id, setId] = useState("");
@@ -21,6 +22,7 @@ export default function Login({ setClick }: { setClick: () => void }) {
       .then((res) => {
         if (res.ok) {
           console.log("로그인 성공");
+          Cookies.set("login", "good");
           setClick();
         } else {
           console.log("로그인 실패");
