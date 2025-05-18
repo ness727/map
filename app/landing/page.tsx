@@ -37,8 +37,7 @@ export default function Home() {
               <SearchBox setName={() => {}} />
             </Suspense>
 
-            {Cookies.get("JSESSIONID") !== null ||
-            Cookies.get("JSESSIONID") !== undefined ? (
+            {Cookies.get("JSESSIONID") == undefined ? (
               <>
                 <button
                   className={styles.button}
