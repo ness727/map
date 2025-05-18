@@ -2,7 +2,7 @@
 
 import Head from "next/head";
 import styles from "./Landing.module.css";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import SearchBox from "../components/SearchBox";
 import Login from "./Login";
 import Join from "./Join";
@@ -10,6 +10,15 @@ import Cookies from "js-cookie";
 
 export default function Home() {
   const [click, setClick] = useState("");
+  const [isClient, setIsClient] = useState(false); // 클라이언트에서만 동작하도록 설정
+
+  useEffect(() => {
+    setIsClient(true); // 클라이언트에서만 상태 설정
+  }, []);
+
+  // 클라이언트에서만 쿠키 확인
+  const isLoggedIn = Cookies.get("JSESSIONID") !== undefined;
+  if (!isClient) return null;
 
   return (
     <div className={styles.container}>
@@ -37,7 +46,7 @@ export default function Home() {
               <SearchBox setName={() => {}} />
             </Suspense>
 
-            {Cookies.get("JSESSIONID") == undefined ? (
+            {!isLoggedIn ? (
               <>
                 <button
                   className={styles.button}
