@@ -128,7 +128,7 @@ export default function SideBar({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ...saveData, distance: length }),
+          body: JSON.stringify({ ...saveData, distance: length.toFixed(2) }),
           credentials: "include",
         }
       );
@@ -201,7 +201,7 @@ export default function SideBar({
       const transformed = geoObject.geometry.coordinates.map((item: any) =>
         transform(item, "EPSG:3857", "EPSG:4326")
       );
-
+      
       changeRoute(transformed);
     };
 
@@ -243,7 +243,7 @@ export default function SideBar({
           display: isClosed ? "none" : "",
         }}
       >
-        {Cookies.get("login") != undefined ? (
+        {true ? (
           <>
             {isDrawBtnClicked ? (
               <h1>마우스 더블 클릭으로 경로를 완성하세요!!</h1>
