@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Feature, Map } from "ol";
 import { GeoJSON } from "ol/format";
 import { Draw } from "ol/interaction";
+import { getLength } from 'ol/sphere';
 
 import styles from "./SideBar.module.css";
 import CloseButton from "../components/CloseButton";
@@ -95,6 +96,7 @@ export default function SideBar({
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     })
       .then((body) => {
         body.json().then((json) => {
@@ -113,6 +115,12 @@ export default function SideBar({
     try {
       saveData.information = route;
 
+      const line = new LineString(saveData.information);
+
+      // 거리 계산 (단위: meter)
+      const length = getLength(line, {projection: 'EPSG:4326'}) / 1000;
+      console.log(`거리: ${length.toFixed(2)} km`);
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes`,
         {
@@ -120,7 +128,7 @@ export default function SideBar({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(saveData),
+          body: JSON.stringify({ ...saveData, distance: length }),
           credentials: "include",
         }
       );
@@ -210,7 +218,9 @@ export default function SideBar({
 
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes` +
-        `?name=${keyword}`
+        `?name=${keyword}`, {
+          credentials: "include",
+        }
     )
       .then((res) => res.json())
       .then((json: RouteResponse) => {

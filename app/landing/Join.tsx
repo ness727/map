@@ -23,6 +23,7 @@ export default function Join({ setClick }: { setClick: () => void }) {
           userPassword: pwd,
           nickname: nickname,
         }),
+        credentials: "include",
       }
     )
       .then((res) => {
