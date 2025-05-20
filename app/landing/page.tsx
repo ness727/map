@@ -11,14 +11,12 @@ import Cookies from "js-cookie";
 export default function Home() {
   const [click, setClick] = useState("");
   const [isClient, setIsClient] = useState(false); // 클라이언트에서만 동작하도록 설정
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setIsClient(true); // 클라이언트에서만 상태 설정
+    setIsLoggedIn(Cookies.get("login") !== undefined);
   }, []);
-
-  // 클라이언트에서만 쿠키 확인
-  const isLoggedIn = Cookies.get("login") !== undefined;
-  if (!isClient) return null;
 
   const logout = () => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/logout`, {
@@ -36,6 +34,8 @@ export default function Home() {
           .catch((err) => {
             console.error("Logout Error:", err);
           });
+
+          setIsLoggedIn(false);
   }
 
   return (
@@ -95,7 +95,7 @@ export default function Home() {
             )}
           </>
         ) : click === "Login" ? (
-          <Login setClick={() => setClick("")} />
+          <Login setClick={() => {setClick(""); setIsLoggedIn(true); }} />
         ) : (
           <Join setClick={() => setClick("")} />
         )}
