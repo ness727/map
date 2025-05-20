@@ -21,7 +21,9 @@ export default function Home() {
   if (!isClient) return null;
 
   const logout = () => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/logout`)
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/logout`, {
+            method: 'POST',
+          })
           .then((res) => res.ok ? alert("다음에 또 만나요~") : alert("로그아웃 중 문제가 발생했습니다."))
           .catch((err) => {
             console.error("Logout Error:", err);
