@@ -1,14 +1,18 @@
-  import { Route } from "../map/SideBar";
+  import { LineString } from "ol/geom";
+import { Route } from "../map/SideBar";
   import styles from "./Board.module.css";
+import { Coordinate } from "ol/coordinate";
 
   export default function Board({
     content,
     showRoute,
-    moveMap
+    moveMap,
+    drawPoints
   }: {
     content: Route;
     showRoute: (information: [number, number][]) => void;
     moveMap: () => void;
+    drawPoints: (coordinate: [number, number][]) => void;
   }) {
     const dateFormat = (date: string) => {
       return date.replace("T", " ").slice(0, 16);
@@ -30,6 +34,7 @@
             onClick={() => {
                 moveMap();
                 showRoute(content.information);
+                drawPoints(content.information);
               }}
           >
             보기

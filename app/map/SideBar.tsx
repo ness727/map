@@ -19,6 +19,8 @@ import Modal from "../components/RouteSaveModal";
 import Input from "./Input";
 import Select from "./Select";
 import Cookies from "js-cookie";
+import Style from "ol/style/Style";
+import Icon from "ol/style/Icon";
 
 interface SaveFormat {
   categoryIdx: string;
@@ -80,7 +82,7 @@ export default function SideBar({
   const contentWidth = 400;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categoryIdx, setCategoryIdx] = useState(0);
+  const [categoryIdx, setCategoryIdx] = useState("");
   const [saveData, setSaveData] = useState<SaveFormat>({
     categoryIdx: "",
     name: "",
@@ -199,6 +201,40 @@ export default function SideBar({
       );
   };
 
+  const drawPoints = (coordinates: [number, number][]) => {
+      const line = new LineString(coordinates);
+
+      const startCoord = line.getFirstCoordinate();
+      const endCoord = line.getLastCoordinate();
+
+      const startPointFeature = new Feature(new Point(fromLonLat(startCoord)));
+      const endPointFeature = new Feature(new Point(fromLonLat(endCoord)));
+
+      // 벡터 소스 및 레이어 생성
+      const vectorSource = new VectorSource({
+        features: [startPointFeature, endPointFeature],
+      });
+
+      // 마커 속성 지정
+      const markerStyle = new Style({
+        image: new Icon({
+          opacity: 1,
+          scale: 1.5,
+          src: "http://map.vworld.kr/images/ol3/marker_blue.png",
+        }),
+        zIndex: 100,
+      });
+
+      // 벡터 레이어 생성
+      const vectorLayer = new VectorLayer({
+        source: vectorSource,
+        style: markerStyle,
+      });
+
+      map.addLayer(vectorLayer);
+      map.render();
+  }
+
   useEffect(() => {
     if (!lineDraw || !map) return;
 
@@ -294,6 +330,7 @@ export default function SideBar({
                   key={index}
                   showRoute={showRoute}
                   moveMap={() => moveMap(item.information[0])}
+                  drawPoints={drawPoints}
                 />
               );
             })}
@@ -317,7 +354,7 @@ export default function SideBar({
               onChange={(e) => {
                 setSaveData((prev) => ({
                   ...prev,
-                  categoryIdx: e.target.value,
+                  categoryIdx: e.target.value as string,
                 }));
               }}
               comboData={comboData}

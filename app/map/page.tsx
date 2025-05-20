@@ -56,20 +56,18 @@ export default function MapPage() {
     });
 
   const clearLayer = () => {
-    if (map != null) {
-      const layers = map.getLayers().getArray();
-      const vectorLayer = layers.find(
-        (layer) => layer instanceof VectorLayer
-      ) as VectorLayer<VectorSource>;
+  if (map) {
+    const layers = map.getLayers().getArray();
 
-      if (vectorLayer) {
-        const source = vectorLayer.getSource();
+    layers
+      .filter((layer) => layer instanceof VectorLayer)
+      .forEach((vectorLayer) => {
+        const source = (vectorLayer as VectorLayer<VectorSource>).getSource();
         source?.clear();
-      } else {
-        console.error("벡터레이어 조회 오류");
-      }
-    }
-  };
+      });
+  }
+};
+
 
   // const onOpen = useCallback(() => {
   //   setIsModalOpen(true);
