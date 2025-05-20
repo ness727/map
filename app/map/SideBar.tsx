@@ -298,7 +298,7 @@ export default function SideBar({
           display: isClosed ? "none" : "",
         }}
       >
-        {true ? (
+        {Cookies.get("login") !== undefined ? (
           <>
             {isDrawBtnClicked ? (
               <h1>마우스 더블 클릭으로 경로를 완성하세요!!</h1>

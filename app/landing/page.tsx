@@ -10,11 +10,9 @@ import Cookies from "js-cookie";
 
 export default function Home() {
   const [click, setClick] = useState("");
-  const [isClient, setIsClient] = useState(false); // 클라이언트에서만 동작하도록 설정
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // 클라이언트에서만 상태 설정
     setIsLoggedIn(Cookies.get("login") !== undefined);
   }, []);
 
