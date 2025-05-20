@@ -80,6 +80,7 @@ export default function SideBar({
   const contentWidth = 400;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [categoryIdx, setCategoryIdx] = useState(0);
   const [saveData, setSaveData] = useState<SaveFormat>({
     categoryIdx: "",
     name: "",
@@ -105,6 +106,24 @@ export default function SideBar({
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes` +
+        `?categoryIdx=${categoryIdx}&name=${keyword}`, {
+          credentials: "include",
+        }
+    )
+      .then((res) => res.json())
+      .then((json: RouteResponse) => {
+        setData(json);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.error("Error fetching routes:", err);
+      });
+    router.replace(pathName);
+  }, [categoryIdx])
 
   const startDraw = () => {
     map.addInteraction(lineDraw);
@@ -218,7 +237,7 @@ export default function SideBar({
 
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes` +
-        `?name=${keyword}`, {
+        `?categoryIdx=${categoryIdx}&name=${keyword}`, {
           credentials: "include",
         }
     )
@@ -262,7 +281,7 @@ export default function SideBar({
           <SearchBox setName={(name: string) => setKeyword(name)} />
           <div className={styles.categoryDiv}>
             <div className={styles.categoryText}>카테고리</div>
-            <Select saveData="" onChange={(e) => {}} comboData={comboData} />
+            <Select saveData="" onChange={(e) => { setCategoryIdx(e.target.value) }} comboData={comboData} />
           </div>
 
           <hr className={styles.searchHr} />
