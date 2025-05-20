@@ -31,7 +31,7 @@
 
 .innerButtonContainer {
   height: 100%;
-  width: 100px;
+  width: 70px;
   display: flex;
   flex-direction: column;
 }
@@ -54,7 +54,7 @@
   width: 100%;
   height: 100%;
   padding: 0rem 1rem;
-  background-color: #dc3545;
+  background-color: #f28b82;
   color: white;
   border: none;
   border-right: 5px;
