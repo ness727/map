@@ -25,12 +25,17 @@ export default function Home() {
             method: 'POST',
             credentials: "include",
           })
-          .then((res) => res.ok ? alert("다음에 또 만나요~") : alert("로그아웃 중 문제가 발생했습니다."))
+          .then((res) => {
+            if (res.ok) { 
+              alert("다음에 또 만나요~"); 
+              Cookies.remove("login");
+              setClick("");
+            } 
+            else alert("로그아웃 중 문제가 발생했습니다.");
+          })
           .catch((err) => {
             console.error("Logout Error:", err);
           });
-    Cookies.remove("login");
-    Cookies.remove("JSESSIONID");
   }
 
   return (
@@ -82,10 +87,7 @@ export default function Home() {
             ) : (
               <button
                   className={styles.button}
-                  onClick={() => {
-                    setClick("");
-                    logout();
-                  }}
+                  onClick={() => logout}
                   style={{ marginTop: 70 }}
                 >
                   로그아웃
