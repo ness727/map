@@ -14,9 +14,12 @@ import { XYZ } from "ol/source";
 import Modal from "../components/RouteSaveModal";
 import Input from "./Input";
 import Style from "ol/style/Style";
+import styles from "./Map.module.css"
 import Stroke from "ol/style/Stroke";
+import { useRouter } from "next/navigation";
 
 export default function MapPage() {
+  const router = useRouter();
   const [map, setMap] = useState<Map | null>(null);
   const [route, setRoute] = useState<[]>([]);
 
@@ -126,6 +129,10 @@ export default function MapPage() {
       )}
 
       <div id="map" style={{ width: "100vw", height: "100vh" }}></div>
+
+      <div id="home-button" className={styles.homeButton} onClick={() => router.push("/")} >
+        홈으로
+      </div>
     </div>
   );
 }
