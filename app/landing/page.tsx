@@ -87,7 +87,7 @@ export default function Home() {
             ) : (
               <button
                   className={styles.button}
-                  onClick={() => logout}
+                  onClick={() => logout()}
                   style={{ marginTop: 70 }}
                 >
                   로그아웃
