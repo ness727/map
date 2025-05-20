@@ -29,7 +29,15 @@
   align-items: center;
 }
 
-.button {
+.innerButtonContainer {
+  height: 100%;
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+.viewButton {
+  flex: 0.85;
   width: 100%;
   height: 100%;
   padding: 0rem 1rem;
@@ -39,6 +47,20 @@
   border-right: 5px;
   font-weight: 600;
   cursor: pointer;
+}
+
+.removeButton {
+  flex: 0.15;
+  width: 100%;
+  height: 100%;
+  padding: 0rem 1rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-right: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom-right-radius: 6px;
 }
 
 .button:hover {

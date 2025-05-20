@@ -32,7 +32,7 @@ export default function Join({ setClick }: { setClick: () => void }) {
           alert("가입에 성공했습니다!");
           setClick();
         } else {
-          console.log("가입 실패");
+          alert("입력한 정보를 확인해주세요.");
         }
       })
       .catch((error) => {

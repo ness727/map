@@ -29,16 +29,26 @@ import { Coordinate } from "ol/coordinate";
           <div className={styles.date}>추가 일시: {dateFormat(content.createdAt)}</div>
         </div>
         <div className={styles.buttonContainer}>
-          <button
-            className={styles.button}
-            onClick={() => {
-                moveMap();
-                showRoute(content.information);
-                drawPoints(content.information);
-              }}
-          >
-            보기
-          </button>
+          <div className={styles.innerButtonContainer}>
+            <button
+              className={styles.viewButton}
+              onClick={() => {
+                  moveMap();
+                  showRoute(content.information);
+                  drawPoints(content.information);
+                }}
+            >
+              보기
+            </button>
+            <button
+              className={styles.removeButton}
+              onClick={() => {
+                  
+                }}
+            >
+              삭제
+            </button>
+          </div>
         </div>
       </div>
     );
