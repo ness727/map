@@ -20,6 +20,16 @@ export default function Home() {
   const isLoggedIn = Cookies.get("login") !== undefined;
   if (!isClient) return null;
 
+  const logout = () => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/logout`)
+          .then((res) => res.ok ? alert("다음에 또 만나요~") : alert("로그아웃 중 문제가 발생했습니다."))
+          .catch((err) => {
+            console.error("Logout Error:", err);
+          });
+    Cookies.remove("login");
+    Cookies.remove("JSESSIONID");
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -67,7 +77,16 @@ export default function Home() {
                 </button>
               </>
             ) : (
-              <></>
+              <button
+                  className={styles.button}
+                  onClick={() => {
+                    setClick("");
+                    logout();
+                  }}
+                  style={{ marginTop: 70 }}
+                >
+                  로그아웃
+                </button>
             )}
           </>
         ) : click === "Login" ? (
@@ -76,8 +95,6 @@ export default function Home() {
           <Join setClick={() => setClick("")} />
         )}
       </main>
-
-      {/* <footer className={styles.footer}>그냥 잘하자</footer> */}
     </div>
   );
 }
