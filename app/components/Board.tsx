@@ -48,7 +48,7 @@ export default function Board({
               className={styles.removeButton}
               onClick={() => {
                 const confirmed = confirm("정말 삭제하시겠습니까?");
-                if (confirmed) deleteRoute(content.categoryIdx);
+                if (confirmed) deleteRoute(content.routeIdx);
               }}
             >
               삭제
