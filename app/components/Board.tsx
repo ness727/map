@@ -1,5 +1,6 @@
 import { Route } from "../map/SideBar";
 import styles from "./Board.module.css";
+import Cookies from "js-cookie";
 
 export default function Board({
   content,
@@ -42,15 +43,19 @@ export default function Board({
           >
             보기
           </button>
-          <button
-            className={styles.removeButton}
-            onClick={() => {
-              const confirmed = confirm("정말 삭제하시겠습니까?");
-              if (confirmed) deleteRoute(content.categoryIdx);
-            }}
-          >
-            삭제
-          </button>
+          {Cookies.get("login") !== undefined ? (
+            <button
+              className={styles.removeButton}
+              onClick={() => {
+                const confirmed = confirm("정말 삭제하시겠습니까?");
+                if (confirmed) deleteRoute(content.categoryIdx);
+              }}
+            >
+              삭제
+            </button>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
