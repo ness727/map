@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Feature, Map } from "ol";
 import { GeoJSON } from "ol/format";
 import { Draw } from "ol/interaction";
-import { getLength } from 'ol/sphere';
+import { getLength } from "ol/sphere";
 
 import styles from "./SideBar.module.css";
 import CloseButton from "../components/CloseButton";
@@ -112,9 +112,10 @@ export default function SideBar({
   useEffect(() => {
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes` +
-        `?categoryIdx=${categoryIdx}&name=${keyword}`, {
-          credentials: "include",
-        }
+        `?categoryIdx=${categoryIdx}&name=${keyword}`,
+      {
+        credentials: "include",
+      }
     )
       .then((res) => res.json())
       .then((json: RouteResponse) => {
@@ -125,7 +126,7 @@ export default function SideBar({
         console.error("Error fetching routes:", err);
       });
     router.replace(pathName);
-  }, [categoryIdx])
+  }, [categoryIdx]);
 
   const startDraw = () => {
     map.addInteraction(lineDraw);
@@ -139,7 +140,7 @@ export default function SideBar({
       const line = new LineString(saveData.information);
 
       // 거리 계산 (단위: meter)
-      const length = getLength(line, {projection: 'EPSG:4326'}) / 1000;
+      const length = getLength(line, { projection: "EPSG:4326" }) / 1000;
       console.log(`거리: ${length.toFixed(2)} km`);
 
       const res = await fetch(
@@ -173,6 +174,26 @@ export default function SideBar({
     }
   };
 
+  const deleteRoute = async (routeIdx: number) => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ routeIdx: routeIdx }),
+        credentials: "include",
+      }
+    );
+
+    if (res.ok) {
+      alert("삭제되었습니다.");
+    } else {
+      alert("자신의 경로가 아니면 삭제할 수 없습니다.");
+    }
+  };
+
   const showRoute = (information: [number, number][]) => {
     clearLayer();
 
@@ -202,38 +223,38 @@ export default function SideBar({
   };
 
   const drawPoints = (coordinates: [number, number][]) => {
-      const line = new LineString(coordinates);
+    const line = new LineString(coordinates);
 
-      const startCoord = line.getFirstCoordinate();
-      const endCoord = line.getLastCoordinate();
+    const startCoord = line.getFirstCoordinate();
+    const endCoord = line.getLastCoordinate();
 
-      const startPointFeature = new Feature(new Point(fromLonLat(startCoord)));
-      const endPointFeature = new Feature(new Point(fromLonLat(endCoord)));
+    const startPointFeature = new Feature(new Point(fromLonLat(startCoord)));
+    const endPointFeature = new Feature(new Point(fromLonLat(endCoord)));
 
-      // 벡터 소스 및 레이어 생성
-      const vectorSource = new VectorSource({
-        features: [startPointFeature, endPointFeature],
-      });
+    // 벡터 소스 및 레이어 생성
+    const vectorSource = new VectorSource({
+      features: [startPointFeature, endPointFeature],
+    });
 
-      // 마커 속성 지정
-      const markerStyle = new Style({
-        image: new Icon({
-          opacity: 1,
-          scale: 1.5,
-          src: "http://map.vworld.kr/images/ol3/marker_blue.png",
-        }),
-        zIndex: 100,
-      });
+    // 마커 속성 지정
+    const markerStyle = new Style({
+      image: new Icon({
+        opacity: 1,
+        scale: 1.5,
+        src: "http://map.vworld.kr/images/ol3/marker_blue.png",
+      }),
+      zIndex: 100,
+    });
 
-      // 벡터 레이어 생성
-      const vectorLayer = new VectorLayer({
-        source: vectorSource,
-        style: markerStyle,
-      });
+    // 벡터 레이어 생성
+    const vectorLayer = new VectorLayer({
+      source: vectorSource,
+      style: markerStyle,
+    });
 
-      map.addLayer(vectorLayer);
-      map.render();
-  }
+    map.addLayer(vectorLayer);
+    map.render();
+  };
 
   useEffect(() => {
     if (!lineDraw || !map) return;
@@ -256,7 +277,7 @@ export default function SideBar({
       const transformed = geoObject.geometry.coordinates.map((item: any) =>
         transform(item, "EPSG:3857", "EPSG:4326")
       );
-      
+
       changeRoute(transformed);
     };
 
@@ -273,9 +294,10 @@ export default function SideBar({
 
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes` +
-        `?categoryIdx=${categoryIdx}&name=${keyword}`, {
-          credentials: "include",
-        }
+        `?categoryIdx=${categoryIdx}&name=${keyword}`,
+      {
+        credentials: "include",
+      }
     )
       .then((res) => res.json())
       .then((json: RouteResponse) => {
@@ -317,7 +339,13 @@ export default function SideBar({
           <SearchBox setName={(name: string) => setKeyword(name)} />
           <div className={styles.categoryDiv}>
             <div className={styles.categoryText}>카테고리</div>
-            <Select saveData="" onChange={(e) => { setCategoryIdx(e.target.value) }} comboData={comboData} />
+            <Select
+              saveData=""
+              onChange={(e) => {
+                setCategoryIdx(e.target.value);
+              }}
+              comboData={comboData}
+            />
           </div>
 
           <hr className={styles.searchHr} />
@@ -331,6 +359,7 @@ export default function SideBar({
                   showRoute={showRoute}
                   moveMap={() => moveMap(item.information[0])}
                   drawPoints={drawPoints}
+                  deleteRoute={deleteRoute}
                 />
               );
             })}
