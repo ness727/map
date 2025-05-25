@@ -176,13 +176,9 @@ export default function SideBar({
 
   const deleteRoute = async (routeIdx: number) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes`,
+      `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes?routeIdx=${routeIdx}`,
       {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ routeIdx: routeIdx }),
         credentials: "include",
       }
     );
