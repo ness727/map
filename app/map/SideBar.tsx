@@ -176,7 +176,7 @@ export default function SideBar({
 
   const deleteRoute = async (routeIdx: number) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes?routeIdx=${routeIdx}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_API_PREFIX}/api/v1/routes/${routeIdx}`,
       {
         method: "DELETE",
         credentials: "include",
