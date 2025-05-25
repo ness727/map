@@ -185,7 +185,6 @@ export default function SideBar({
 
     if (res.ok) {
       alert("삭제되었습니다.");
-      router.refresh();
     } else {
       alert("자신의 경로가 아니면 삭제할 수 없습니다.");
     }
