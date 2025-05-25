@@ -13,7 +13,7 @@ export default function Board({
   showRoute: (information: [number, number][]) => void;
   moveMap: () => void;
   drawPoints: (coordinate: [number, number][]) => void;
-  deleteRoute: (routeIdx: number) => void;
+  deleteRoute: (routeIdx: number, title: string) => void;
 }) {
   const dateFormat = (date: string) => {
     return date.replace("T", " ").slice(0, 16);
@@ -48,7 +48,7 @@ export default function Board({
               className={styles.removeButton}
               onClick={() => {
                 const confirmed = confirm("정말 삭제하시겠습니까?");
-                if (confirmed) deleteRoute(content.routeIdx);
+                if (confirmed) deleteRoute(content.routeIdx, content.name);
               }}
             >
               삭제
