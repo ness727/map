@@ -93,7 +93,7 @@ export default function Home() {
             )}
           </>
         ) : click === "Login" ? (
-          <Login setClick={() => {setClick(""); setIsLoggedIn(true); }} />
+          <Login setClick={() => setClick("")} setIsLoggedIn={() => setIsLoggedIn(true)} />
         ) : (
           <Join setClick={() => setClick("")} />
         )}

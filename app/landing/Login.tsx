@@ -4,7 +4,7 @@ import { useState } from "react";
 import styles from "./Login.module.css";
 import Cookies from "js-cookie";
 
-export default function Login({ setClick }: { setClick: () => void }) {
+export default function Login({ setClick, setIsLoggedIn }: { setClick: () => void, setIsLoggedIn: () => void }) {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
 
@@ -23,6 +23,7 @@ export default function Login({ setClick }: { setClick: () => void }) {
         if (res.ok) {
           console.log("로그인 성공");
           Cookies.set("login", "good");
+          setIsLoggedIn();
           setClick();
         } else {
           console.log("로그인 실패");
@@ -72,7 +73,7 @@ export default function Login({ setClick }: { setClick: () => void }) {
           <button type="submit" className={styles.button}>
             로그인
           </button>
-          <button className={styles.button} onClick={setClick}>
+          <button type="button" className={styles.button} onClick={setClick}>
             뒤로 가기
           </button>
         </div>
