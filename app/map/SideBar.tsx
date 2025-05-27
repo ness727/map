@@ -376,11 +376,11 @@ export default function SideBar({
         }}
       />
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h1>나의 경로 저장하기</h1>
+        <div className={styles.modalTitle}>나의 경로 저장하기</div>
         <br />
         <div className={styles.modalMiddleContainer}>
           <div className={styles.selectDiv}>
-            카테고리
+            <span className={styles.text}>카테고리</span>
             <Select
               saveData={saveData}
               onChange={(e) => {
@@ -403,10 +403,10 @@ export default function SideBar({
               }));
             }}
           >
-            경로명
+          <span className={styles.text}>경로명</span>
           </Input>
           <div className={styles.textareaContainer}>
-            설명
+            <span className={styles.text}>설명</span>
             <textarea
               className={styles.textarea}
               id="description"
@@ -428,12 +428,13 @@ export default function SideBar({
           }}
           style={{
             marginTop: "10px",
-            padding: "8px 16px",
+            padding: "16px 24px",
             backgroundColor: "#0056b3",
             color: "#fff",
             border: "none",
             borderRadius: "4px",
             cursor: "pointer",
+            marginLeft: "86%",
           }}
         >
           저장
