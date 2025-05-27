@@ -49,6 +49,10 @@
   cursor: pointer;
 }
 
+.viewButton:hover {
+  background-color: #3435aa;
+}
+
 .removeButton {
   flex: 0.2;
   width: 100%;
@@ -63,8 +67,8 @@
   border-bottom-right-radius: 6px;
 }
 
-.button:hover {
-  background-color: #3435aa;
+.removeButton:hover {
+  background-color: rgba(255, 58, 107, 0.575);
 }
 
 .date {
